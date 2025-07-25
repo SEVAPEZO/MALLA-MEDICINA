@@ -1,1 +1,33 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const ramos = document.querySelectorAll(".ramo");
 
+  ramos.forEach(ramo => {
+    ramo.addEventListener("click", () => {
+      if (ramo.classList.contains("bloqueado")) return;
+
+      ramo.classList.toggle("aprobado");
+      saveEstado();
+    });
+  });
+
+  function saveEstado() {
+    const estado = {};
+    document.querySelectorAll(".ramo").forEach(r => {
+      const id = r.dataset.id;
+      estado[id] = r.classList.contains("aprobado");
+    });
+    localStorage.setItem("estadoRamos", JSON.stringify(estado));
+  }
+
+  function loadEstado() {
+    const estado = JSON.parse(localStorage.getItem("estadoRamos") || "{}");
+    document.querySelectorAll(".ramo").forEach(r => {
+      const id = r.dataset.id;
+      if (estado[id]) {
+        r.classList.add("aprobado");
+      }
+    });
+  }
+
+  loadEstado();
+});
